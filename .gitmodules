@@ -1,0 +1,3 @@
+[submodule "hw1/hw1_B10902024/Relation-DETR"]
+	path = hw1/hw1_B10902024/Relation-DETR
+	url = https://github.com/xiuqhou/Relation-DETR
