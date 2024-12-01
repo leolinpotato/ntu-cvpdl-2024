@@ -13,6 +13,7 @@ def parse_args():
     parser.add_argument("--model_name", default="", type=str, required=True)
     parser.add_argument("--input_file", default="", type=str, required=True)
     parser.add_argument("--output_dir", default="", type=str, required=True)
+    parser.add_argument("--image_dir", default="", type=str, required=True)    
     parser.add_argument("--prompt", default="", type=str, required=True)
     parser.add_argument("--type", default="", type=str, required=True)
 
@@ -37,11 +38,11 @@ def main():
 
     # Generate an image described by the prompt and
     # insert objects described by text at the region defined by bounding boxes
-    if args.type == 'text' or args.type == 'layout':
+    if args.type == 'layout':
         pipe = StableDiffusionGLIGENPipeline.from_pretrained(
             args.model_name, variant="fp16", torch_dtype=torch.float16
         )
-    else:
+    elif args.type == 'image':
         pipe = StableDiffusionGLIGENTextImagePipeline.from_pretrained(
             args.model_name, torch_dtype=torch.float16
         )
@@ -50,21 +51,37 @@ def main():
     with open(args.input_file, "r") as input_file:
         input_annotations = json.load(input_file)
 
-    for input_annotation in input_annotations:
+    for input_annotation in tqdm(input_annotations):
         prompt = input_annotation[args.prompt]
         boxes = [normalize_bbox(input_annotation['width'], input_annotation['height'], bbox) for bbox in input_annotation['bboxes']]
         phrases = input_annotation['labels']
+        gligen_image = load_image(os.path.join(args.image_dir, input_annotation["image"]))
 
-        images = pipe(
-            prompt=prompt,
-            gligen_phrases=phrases,
-            gligen_boxes=boxes,
-            gligen_scheduled_sampling_beta=1,
-            output_type="pil",
-            num_inference_steps=50,
-        ).images
+        if args.type == 'layout':
+            image = pipe(
+                prompt=prompt,
+                gligen_phrases=phrases,
+                gligen_boxes=boxes,
+                gligen_scheduled_sampling_beta=1,
+                output_type="pil",
+                num_inference_steps=50,
+                width=512,
+                height=512
+            ).images[0]
+        elif args.type == 'image':
+            image = pipe(
+                prompt=prompt,
+                gligen_phrases=phrases,
+                gligen_images=[gligen_image],
+                gligen_boxes=boxes,
+                gligen_scheduled_sampling_beta=1,
+                output_type="pil",
+                num_inference_steps=50,
+                width=512,
+                height=512
+            ).images[0]
 
-        images[0].save(os.path.join(args.output_dir, input_annotation['image']))
+        image.save(os.path.join(args.output_dir, input_annotation['image']))
 
 if __name__ == "__main__":
     main()
