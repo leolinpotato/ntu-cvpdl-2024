@@ -31,7 +31,7 @@ def main():
     with open(args.input_file, "r") as input_file:
         input_annotations = json.load(input_file)
 
-    for input_annotation in tqdm(input_annotations):
+    for i, input_annotation in enumerate(tqdm(input_annotations)):
         prompt = input_annotation[args.prompt]
         image = pipe(prompt, width=512, height=512).images[0]
         image.save(os.path.join(args.output_dir, input_annotation['image']))
