@@ -21,11 +21,11 @@ def parse_args():
     return args
 
 def normalize_bbox(image_width, image_height, bbox):
-    x_min, y_min, width, height = bbox
+    x_min, y_min, x_max, y_max = bbox
     normalized_x_min = x_min/image_width
     normalized_y_min = y_min/image_height
-    normalized_x_max = (x_min+width)/image_width
-    normalized_y_max = (y_min+height)/image_height
+    normalized_x_max = x_max/image_width
+    normalized_y_max = y_max/image_height
     return [normalized_x_min, normalized_y_min, normalized_x_max, normalized_y_max]
 
 def main():

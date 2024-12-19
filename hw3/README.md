@@ -40,6 +40,31 @@ python gligen.py \
   --type text
 ```
 
+## GLIGEN + Attention-refocusing
+```shell
+# Set up environment
+conda create --name ldm_layout python==3.8.0
+conda activate ldm_layout
+conda install pytorch torchvision torchaudio pytorch-cuda=11.7 -c pytorch -c nvidia
+pip install -r requirements.txt
+pip install git+https://github.com/CompVis/taming-transformers.git
+pip install git+https://github.com/openai/CLIP.git
+```
+
+Download GLIGEN through https://huggingface.co/gligen/gligen-generation-text-box/blob/main/diffusion_pytorch_model.bin and put them under attention-refocuing/gligen_checkpoints
+
+```shell
+# Inference
+bash attention_refocusing.py
+```
+```shell
+python attention_refocusing.py \
+    --model_name gligen_checkpoints/diffusion_pytorch_model.bin \
+    --input_file ../annotations/visualization_200-opt-6.7b-coco.json \
+    --prompt generated_text \
+    --output_dir visualization_200_gligen_text \
+```
+
 ## FID
 ### Resize
 ```shell

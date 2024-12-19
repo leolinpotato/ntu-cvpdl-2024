@@ -93,8 +93,9 @@ def main():
         for idx, input_annotation in enumerate(batch_annotation):
             output_annotation = input_annotation
             output_annotation['generated_text'] = generated_text[idx]
-            output_annotation['prompt_w_label'] = f"{generated_text[idx]}. {', '.join(input_annotation['labels'])}, height: {input_annotation['height']}, width: {input_annotation['width']}"
+            output_annotation['prompt_w_label'] = f"{generated_text[idx]}. {', '.join(list(set(input_annotation['labels'])))}, height: {input_annotation['height']}, width: {input_annotation['width']}"
             output_annotation['prompt_w_suffix'] = f"{output_annotation['prompt_w_label']}, HD quality, highly detailed"
+            output_annotation['simple_background'] = f"{output_annotation['prompt_w_suffix']}. Background is simple"
             output_annotation['generated_text_w_prompt'] = f"{output_annotation['prompt_w_suffix']}. {generated_text_w_prompt[idx]}"
             output_annotations.append(output_annotation)
     

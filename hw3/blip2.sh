@@ -6,6 +6,6 @@
 
 python blip2.py \
   --model_name Salesforce/blip2-flan-t5-xl \
-  --input_file label.json \
-  --output_file annotations/label-flan-t5-xl.json \
+  --input_file visualization_200.json \
+  --output_file annotations/visualization_200-flan-t5-xl.json \
   --image_dir images
