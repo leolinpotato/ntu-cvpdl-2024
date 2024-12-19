@@ -6,6 +6,7 @@ hw3/transformed_visualization_200.json
 hw3/tmp
 hw3/utils
 hw3/prediction
-hw3/attention-refocusing/gligen_checkpoints/diffusion_pytorch_model.bin
+hw3/attention-refocusing/gligen_checkpoints/*
 hw3/attention-refocusing/visual/*
 hw3/attention-refocusing/layout/*
+hw1/Relation-DETR/checkpoints/*
